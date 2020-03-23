@@ -39,14 +39,16 @@ jobs:
     executor: node-build
     steps:
       - checkout
+      - create_concatenated_lockfile
       - *restore_cache
       - run: yarn ci:build
   test:
     executor: node-build
     steps:
       - checkout
+      - create_concatenated_lockfile
       - *restore_cache
-      - ls
+      - run: ls
       - run: yarn ci:test
 
 workflows:
