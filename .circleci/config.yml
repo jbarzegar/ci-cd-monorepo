@@ -52,7 +52,17 @@ jobs:
 workflows:
   env-development:
     jobs:
-      - install
+      - install:
+          branches:
+            - ignore: master
       - test:
+          requires:
+            - install
+  env-publish:
+    jobs:
+      - install:
+          branches:
+            - only: master
+      - build:
           requires:
             - install
