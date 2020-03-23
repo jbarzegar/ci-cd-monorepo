@@ -54,13 +54,19 @@ jobs:
 workflows:
   development:
     jobs:
-      - install
+      - install:
+          filters:
+            branches:
+              ignore: master
       - test:
           requires:
             - install
   staging:
     jobs:
-      - install
+      - install:
+          filters:
+            branches:
+              only: master
       - test:
           requires:
             - install
