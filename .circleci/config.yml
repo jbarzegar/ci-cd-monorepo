@@ -37,14 +37,12 @@ jobs:
 
   build:
     executor: node-build
-    branches:
-      only:
-        - master
     steps:
       - checkout
       - create_concatenated_lockfile
       - *restore_cache
       - run: yarn ci:build
+
   test:
     executor: node-build
     steps:
@@ -54,7 +52,25 @@ jobs:
       - run: yarn ci:test
 
 workflows:
-  default:
+  development:
+    triggers:
+      - schedule:
+          filters:
+            branches:
+              ignore:
+                - master
+    jobs:
+      - install
+      - test:
+          requires:
+            - install
+  staging:
+    triggers:
+      - schedule:
+          filters:
+            branches:
+              only:
+                - master
     jobs:
       - install
       - test:
