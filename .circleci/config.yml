@@ -2,7 +2,6 @@ version: 2.1
 
 executors:
   node-build:
-    working_directory: /app
     docker:
       - image: circleci/node:13
 
@@ -39,17 +38,12 @@ jobs:
   build:
     executor: node-build
     steps:
+      - *restore_cache
       - run: yarn ci:build
-      - persist_to_workspace:
-          root: /app
-          paths:
-            - node_modules
   test:
     executor: node-build
     steps:
-      - checkout
-      - attach_workspace:
-          at: /app
+      - *restore_cache
       - run: yarn ci:test
 
 workflows:
