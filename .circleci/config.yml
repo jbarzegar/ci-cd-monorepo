@@ -46,6 +46,7 @@ jobs:
     steps:
       - checkout
       - *restore_cache
+      - ls
       - run: yarn ci:test
 
 workflows:
