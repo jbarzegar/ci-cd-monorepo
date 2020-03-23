@@ -53,24 +53,12 @@ jobs:
 
 workflows:
   development:
-    triggers:
-      - schedule:
-          filters:
-            branches:
-              ignore:
-                - master
     jobs:
       - install
       - test:
           requires:
             - install
   staging:
-    triggers:
-      - schedule:
-          filters:
-            branches:
-              only:
-                - master
     jobs:
       - install
       - test:
