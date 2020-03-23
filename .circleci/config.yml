@@ -1,5 +1,13 @@
 version: 2.1
 
+commands:
+  create_concatenated_lockfile:
+    description: Create a concatenated yarn.lock file
+    steps:
+      - run:
+          name: Combine all yarn.locks into single lockfile
+          command: node scripts/concat-lockfiles.js > combined-yarn.lock
+
 jobs:
   test:
     docker:
@@ -7,6 +15,12 @@ jobs:
 
     steps:
       - checkout
+      - create_concatenated_lockfile
+      - restore_cache:
+        keys:
+          - v1-deps-{{ checksum "yarn.lock" }}-{{ checksum "combined-yarn.lock" }}
+          - v1-deps
+
       - run: yarn install --frozen-lockfile
       - run: yarn ci:test
 
