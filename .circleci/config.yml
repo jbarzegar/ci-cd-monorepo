@@ -50,6 +50,6 @@ workflows:
   env-development:
     jobs:
       - install
-      - test_suites:
+      - test:
           requires:
-            - test
+            - install
