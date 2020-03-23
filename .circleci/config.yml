@@ -17,15 +17,16 @@ jobs:
       - checkout
       - create_concatenated_lockfile
       - restore_cache:
-        keys:
-          - v1-deps-{{ checksum "yarn.lock" }}-{{ checksum "combined-yarn.lock" }}
+          keys:
+            - v1-dependencies-{{ checksum "yarn.lock" }}-{{ checksum "combined-yarn.lock" }}
+            - v1-dependencies-
       - run: yarn install --frozen-lockfile
       - run: yarn ci:test
 
       - save_cache:
           paths:
             - node_modules
-          key: v1-deps-{{ checksum "yarn.lock" }}-{{ checksum "combined-yarn.lock" }}
+          key: v1-dependencies-{{ checksum "yarn.lock" }}-{{ checksum "combined-yarn.lock" }}
 
 workflows:
   default:
