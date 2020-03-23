@@ -3,9 +3,14 @@ version: 2.1
 jobs:
   test:
     docker:
-      - image: node:13
+      - image: circleci/node:13
 
     steps:
       - checkout
       - run: yarn install --frozen-lockfile
       - run: yarn ci:test
+
+workflows:
+  default:
+    jobs:
+      - test
