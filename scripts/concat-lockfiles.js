@@ -12,7 +12,7 @@ const lernaCmd = path.join(NODE_BIN, "lerna");
 
 let getLernaPackages = (lerna = lernaCmd) =>
   exec(`${lerna} list -p -a --json`).then(({ stdout }) =>
-    Promise.resolve(stdout)
+    Promise.resolve(JSON.parse(stdout))
   );
 
 let readLockFile = async ({ name, location }) => {
@@ -30,7 +30,7 @@ let readLockFile = async ({ name, location }) => {
 let createDivider = name => `\n\n# ----------- ${name} -----------\n\n`;
 
 let main = async () => {
-  let packages = JSON.parse(await getLernaPackages());
+  let packages = await getLernaPackages();
   let lockFiles = (
     await Promise.all(
       [{ name: "root", location: ROOT_PATH }, ...packages].map(readLockFile)
