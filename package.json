@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "ci:build": "lerna run build",
-    "ci:test": "lerna run ci:test"
+    "ci:test": "lerna run ci:test",
+    "ci:publish": "lerna run ci:publish"
   },
   "workspaces": [
     "apps/*",

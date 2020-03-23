@@ -1,19 +1,37 @@
 {
   "name": "some-package",
   "version": "1.0.0",
-  "main": "index.js",
   "license": "MIT",
   "private": true,
-  "dependencies": {
-    "jest": "24.9.0",
-    "lodash": "^4.17.15",
-    "ramda": "^0.27.0"
+  "source": "index.js",
+  "main": "build/index.js",
+  "module": "build/index.mjs",
+  "unpkg": "build/index.umd.js",
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ]
+    ]
   },
   "scripts": {
+    "build": "microbundle",
+    "start": "microbundle watch",
     "test": "jest",
-    "ci:test": "jest --ci"
+    "ci:test": "jest --ci",
+    "ci:publish": "npm run build && echo done"
+  },
+  "dependencies": {
+    "jest": "24.9.0"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.9.0",
+    "microbundle": "^0.11.0",
     "typescript": "^3.8.3"
   }
 }
