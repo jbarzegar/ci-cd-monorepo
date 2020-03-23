@@ -39,7 +39,6 @@ jobs:
   build:
     executor: node-build
     steps:
-      - checkout
       - run: yarn ci:build
       - persist_to_workspace:
           root: /tmp
