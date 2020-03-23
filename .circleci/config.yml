@@ -34,8 +34,12 @@ jobs:
       - *restore_cache
       - run: yarn install --frozen-lockfile
       - *save_cache
+
   build:
     executor: node-build
+    branches:
+      only:
+        - master
     steps:
       - checkout
       - create_concatenated_lockfile
@@ -50,19 +54,12 @@ jobs:
       - run: yarn ci:test
 
 workflows:
-  env-development:
+  default:
     jobs:
-      - install:
-          branches:
-            - ignore: master
+      - install
       - test:
           requires:
             - install
-  env-publish:
-    jobs:
-      - install:
-          branches:
-            - only: master
       - build:
           requires:
             - install
