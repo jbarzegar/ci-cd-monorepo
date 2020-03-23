@@ -38,11 +38,13 @@ jobs:
   build:
     executor: node-build
     steps:
+      - checkout
       - *restore_cache
       - run: yarn ci:build
   test:
     executor: node-build
     steps:
+      - checkout
       - *restore_cache
       - run: yarn ci:test
 
