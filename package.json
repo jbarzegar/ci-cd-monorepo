@@ -1,0 +1,17 @@
+{
+  "name": "ci-cd-monorepo",
+  "version": "1.0.0",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "ci:build": "lerna run build",
+    "ci:test": "lerna run ci:test"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "devDependencies": {
+    "lerna": "^3.20.2"
+  }
+}
