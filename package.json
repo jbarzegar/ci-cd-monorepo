@@ -1,6 +1,11 @@
 {
   "name": "ci-cd-monorepo",
   "private": true,
+  "husky": {
+    "hooks": {
+      "prepare-commit-msg": "exec < /dev/tty && yarn git-cz --hook"
+    }
+  },
   "scripts": {
     "ci:build": "lerna run build",
     "ci:test": "lerna run ci:test",
@@ -11,10 +16,16 @@
     "packages/*"
   ],
   "devDependencies": {
-    "@commitlint/cli": "^8.3.5",
-    "@commitlint/config-conventional": "^8.3.4",
-    "@commitlint/config-lerna-scopes": "^8.3.4",
+    "cz-conventional-changelog": "^3.1.0",
+    "husky": "^4.2.3",
     "lerna": "^3.20.2"
   },
-  "dependencies": {}
+  "dependencies": {
+    "commitizen": "^4.0.3"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
 }
