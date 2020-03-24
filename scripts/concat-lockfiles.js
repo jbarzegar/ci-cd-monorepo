@@ -2,18 +2,10 @@ let path = require("path");
 let fs = require("fs");
 
 let { promisify } = require("util");
-
 let readFile = promisify(fs.readFile);
-let exec = promisify(require("child_process").exec);
 
-const ROOT_PATH = path.join(__dirname, "..");
-const NODE_BIN = path.resolve(ROOT_PATH, "node_modules/.bin");
-const lernaCmd = path.join(NODE_BIN, "lerna");
-
-let getLernaPackages = (lerna = lernaCmd) =>
-  exec(`${lerna} list -p -a --json`).then(({ stdout }) =>
-    Promise.resolve(JSON.parse(stdout))
-  );
+let getLernaPackages = require("./get-lerna-packages");
+let { paths } = require("./utils");
 
 let readLockFile = async ({ name, location }) => {
   let lockFile = path.resolve(location, "yarn.lock");
@@ -30,19 +22,21 @@ let readLockFile = async ({ name, location }) => {
 let createDivider = name => `\n\n# ----------- ${name} -----------\n\n`;
 
 let main = async () => {
-  let packages = await getLernaPackages();
-  let lockFiles = (
-    await Promise.all(
-      [{ name: "root", location: ROOT_PATH }, ...packages].map(readLockFile)
-    )
-  ).filter(Boolean);
+  let packages = JSON.parse(await getLernaPackages());
 
-  let file = lockFiles.reduce(
-    (a, b) => a + createDivider(b.name) + b.contents,
-    ""
+  let lockFileBuffers = await Promise.all(
+    [{ name: "root", location: paths.ROOT_PATH }, ...packages].map(readLockFile)
   );
 
-  process.stdout.write(file);
+  let combinedLockFile = lockFileBuffers
+    .filter(Boolean)
+    .reduce(
+      (lockFile, { name, contents }) =>
+        lockFile + createDivider(name) + contents,
+      ""
+    );
+
+  process.stdout.write(combinedLockFile);
 };
 
 main();
