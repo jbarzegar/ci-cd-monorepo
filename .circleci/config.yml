@@ -61,15 +61,15 @@ workflows:
       - test:
           requires:
             - install
-  staging:
-    jobs:
-      - install:
-          filters:
-            branches:
-              only: master
-      - test:
-          requires:
-            - install
-      - build:
-          requires:
-            - install
+  # staging:
+  #   jobs:
+  #     - install:
+  #         filters:
+  #           branches:
+  #             only: master
+  #     - test:
+  #         requires:
+  #           - install
+  #     - build:
+  #         requires:
+  #           - install
