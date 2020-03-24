@@ -1,17 +1,5 @@
 version: 2.1
 
-aliases:
-  - &save_cache
-    save_cache:
-      paths:
-        - node_modules
-      key: v1-dependencies-{{ checksum "yarn.lock" }}-{{ checksum "combined-yarn.lock" }}
-  - &restore_cache
-    restore_cache:
-      keys:
-        - v1-dependencies-{{ checksum "yarn.lock" }}-{{ checksum "combined-yarn.lock" }}
-        - v1-dependencies-
-
 executors:
   node-build:
     docker:
@@ -25,18 +13,63 @@ commands:
           name: Combine all yarn.locks into single lockfile
           command: node scripts/concat-lockfiles.js > combined-yarn.lock
 
+aliases:
+  - &save_cache
+    save_cache:
+      paths:
+        - node_modules
+      key: v1-dependencies-{{ checksum "yarn.lock" }}-{{ checksum "combined-yarn.lock" }}
+  - &restore_cache
+    restore_cache:
+      keys:
+        - v1-dependencies-{{ checksum "yarn.lock" }}-{{ checksum "combined-yarn.lock" }}
+        - v1-dependencies-
+
 jobs:
-  test:
+  install:
     executor: node-build
     steps:
       - checkout
       - create_concatenated_lockfile
       - *restore_cache
       - run: yarn install --frozen-lockfile
-      - run: yarn ci:test
       - *save_cache
 
+  build:
+    executor: node-build
+    steps:
+      - checkout
+      - create_concatenated_lockfile
+      - *restore_cache
+      - run: yarn ci:build
+
+  test:
+    executor: node-build
+    steps:
+      - checkout
+      - create_concatenated_lockfile
+      - *restore_cache
+      - run: yarn ci:test
+
 workflows:
-  default:
+  development:
     jobs:
-      - test
+      - install:
+          filters:
+            branches:
+              ignore: master
+      - test:
+          requires:
+            - install
+  # staging:
+  #   jobs:
+  #     - install:
+  #         filters:
+  #           branches:
+  #             only: master
+  #     - test:
+  #         requires:
+  #           - install
+  #     - build:
+  #         requires:
+  #           - install

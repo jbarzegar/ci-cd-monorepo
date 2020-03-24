@@ -1,4 +1,4 @@
-let { add, sub } = require(".");
+import { add, sub } from ".";
 
 test("should add", () => {
   let expected = 10;
