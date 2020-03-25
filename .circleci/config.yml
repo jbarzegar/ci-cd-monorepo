@@ -51,6 +51,14 @@ jobs:
       - *restore_cache
       - run: yarn ci:test
 
+  release:
+    executor: node-build
+    steps:
+      - checkout
+      - create_concatenated_lockfile
+      - *restore_cache
+      - run: node_modules/.bin/lerna exec -- yarn semantic-release -e semantic-release-monorepo
+
 workflows:
   development:
     jobs:
@@ -61,15 +69,19 @@ workflows:
       - test:
           requires:
             - install
-  # staging:
-  #   jobs:
-  #     - install:
-  #         filters:
-  #           branches:
-  #             only: master
-  #     - test:
-  #         requires:
-  #           - install
-  #     - build:
-  #         requires:
-  #           - install
+  release:
+    jobs:
+      - install:
+          filters:
+            branches:
+              only: master
+      - build:
+          requires:
+            - install
+      - test:
+          requires:
+            - install
+      - release:
+          requires:
+            - build
+            - test
