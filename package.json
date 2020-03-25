@@ -1,5 +1,5 @@
 {
-  "name": "ci-cd-monorepo",
+  "name": "ci-cd-monorepo-yay",
   "private": true,
   "husky": {
     "hooks": {
