@@ -57,7 +57,7 @@ jobs:
       - checkout
       - create_concatenated_lockfile
       - *restore_cache
-      - run: node_modules/.bin/lerna exec -- yarn semantic-release -e semantic-release-monorepo
+      - run: yarn release
 
 workflows:
   development:

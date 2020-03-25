@@ -9,7 +9,8 @@
   "scripts": {
     "ci:build": "lerna run build",
     "ci:test": "lerna run ci:test",
-    "ci:publish": "lerna run ci:publish"
+    "ci:publish": "lerna run ci:publish",
+    "release": "lerna exec -- semantic-release -e semantic-release-monorepo"
   },
   "workspaces": [
     "apps/*",
@@ -21,17 +22,34 @@
     "@commitlint/config-lerna-scopes": "^8.3.4",
     "cz-conventional-changelog": "^3.1.0",
     "cz-customizable": "^6.2.0",
-    "husky": "^4.2.3",
+    "husky": "^4.2.3"
+  },
+  "dependencies": {
+    "@semantic-release/commit-analyzer": "^8.0.1",
+    "@semantic-release/exec": "^5.0.0",
+    "@semantic-release/github": "^7.0.5",
+    "@semantic-release/release-notes-generator": "^9.0.1",
+    "commitizen": "^4.0.3",
     "lerna": "^3.20.2",
     "semantic-release": "^17.0.4",
     "semantic-release-monorepo": "^7.0.1"
-  },
-  "dependencies": {
-    "commitizen": "^4.0.3"
   },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-customizable"
     }
+  },
+  "release": {
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/github",
+      [
+        "@semantic-release/exec",
+        {
+          "publishCmd": "echo run deployment on $LERNA_PACKAGE_NAME && echo ${nextRelease} && exit 1"
+        }
+      ]
+    ]
   }
 }
