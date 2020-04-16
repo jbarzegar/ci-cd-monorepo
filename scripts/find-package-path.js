@@ -5,6 +5,8 @@ let main = async () => {
   console.log("ye");
 };
 
+console.log("something");
+
 if (isRequired()) {
 } else {
   main();
