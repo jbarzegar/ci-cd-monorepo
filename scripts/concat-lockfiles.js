@@ -1,8 +1,6 @@
 let path = require("path");
 let fs = require("fs");
 
-console.log("hello world");
-
 let { promisify } = require("util");
 let readFile = promisify(fs.readFile);
 
@@ -21,7 +19,7 @@ let readLockFile = async ({ name, location }) => {
   return { name, contents };
 };
 
-let createDivider = (name) => `\n\n# ----------- ${name} -----------\n\n`;
+let createDivider = name => `\n\n# ----------- ${name} -----------\n\n`;
 
 let main = async () => {
   let packages = JSON.parse(await getLernaPackages());
