@@ -1,9 +1,6 @@
-#!/usr/bin/env node
-
 let { exec, execSync } = require("child_process");
 let { promisify } = require("util");
-let { paths, isRequired } = require("./utils");
-let { lernaCmd } = paths;
+let { lernaCmd } = require("./utils").paths;
 
 let lernaArgs = "list -p -a --json";
 
@@ -12,13 +9,13 @@ let getLernaPackages = (lerna = lernaCmd) =>
     Promise.resolve(stdout)
   );
 
-if (isRequired()) {
+if (require.main === module) {
+  getLernaPackages().then(packages => process.stdout.write(packages));
+} else {
   module.exports = getLernaPackages;
   module.exports.sync = () =>
     execSync(`${lernaCmd} ${lernaArgs}`, {
       encoding: "utf8",
       stdio: "pipe"
     });
-} else {
-  getLernaPackages().then(packages => process.stdout.write(packages));
 }
